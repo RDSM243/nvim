@@ -26,6 +26,8 @@ treesitter.setup({
     "rust",
     "dockerfile",
     "gitignore",
+    "markdown",
+    "markdown_inline"
   },
   -- auto install above language parsers
   auto_install = true,

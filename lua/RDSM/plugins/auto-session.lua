@@ -17,6 +17,7 @@ auto_session.setup({
   auto_restore_enabled = nil,
   auto_session_suppress_dirs = nil,
   auto_session_use_git_branch = nil,
+  pre_save_cmds = { "NvimTreeClose" },
   -- the configs below are lua only
   bypass_session_save_file_types = nil
 })
