@@ -84,5 +84,14 @@ local plugins = {
       "rmagatti/session-lens",
       dependencies = {"nvim-telescope/telescope.nvim"},
     },
+
+    -- init screen
+    {
+      'goolord/alpha-nvim',
+      dependencies = { 'nvim-tree/nvim-web-devicons' },
+      config = function ()
+        require'alpha'.setup(require'alpha.themes.startify'.config)
+      end
+    },
 }
 require("lazy").setup(plugins, {})
