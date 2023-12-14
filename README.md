@@ -6,10 +6,10 @@ My neovim setup with lazy.
 ### Windows
 #### Clone the repository in C:\Users\User\AppData\Local folder.
 ```lua
-git clone https://github.com/RDSM243/nvim
+git clone https://github.com/RDSM243/nvim.git
 ```
 ### Linux/Mac OS (Unix)
 #### Clone the repository in ~/.config folder.
 ```lua
-git clone https://github.com/RDSM243/nvim
+git clone https://github.com/RDSM243/nvim.git
 ```
