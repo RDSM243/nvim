@@ -96,9 +96,6 @@ local plugins = {
       end
     },
 
-    -- enhanced lsp uis
-    "jose-elias-alvarez/typescript.nvim",
-
    --treesitter 
     {
       "nvim-treesitter/nvim-treesitter",
