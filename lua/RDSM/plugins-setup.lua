@@ -11,66 +11,115 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.g.mapleader = " " --Setting leader key 
+
 -- add list of plugins to install
 local plugins = {
+    --colorschemes
+    {"folke/tokyonight.nvim", lazy = false, priority = 1000},
+
     "nvim-lua/plenary.nvim", -- lua functions that many plugins use
     "christoomey/vim-tmux-navigator", --split window navigation
-    "szw/vim-maximizer", -- maximizes and restore current window
     "tpope/vim-surround",
     "vim-scripts/ReplaceWithRegister",
-    "numToStr/Comment.nvim",
     "nvim-tree/nvim-tree.lua", -- file explorer
     "nvim-tree/nvim-web-devicons", --vscode icons
-    "nvim-lualine/lualine.nvim", --statusline
-    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" }, -- dependency for better sorting performance
-    { "nvim-telescope/telescope.nvim", branch = "0.1.x" }, -- fuzzy finder
 
-    --colorschemes
-    "Shatur/neovim-ayu",
-    "k4yt3x/ayu-vim-darker",
-    "Alexis12119/nightly.nvim",
-    "folke/tokyonight.nvim",
+    {
+      "telescope.nvim",-- fuzzy finder
+      dependencies = {
+        -- dependency for better sorting performance
+        {"nvim-telescope/telescope-fzf-native.nvim", build = "make"},
+      },
+    },
+
+    -- maximizes and restore current window
+    {
+      "szw/vim-maximizer",
+      keys = {
+        {"<leader>sm", "<cmd>MaximizerToggle<CR>", desc = "Maximize/minimize a split"},
+      },
+    },
+
+    {
+    "numToStr/Comment.nvim",
+    event = { "BufReadPre", "BufNewFile"},
+    config = function()
+      require("RDSM.plugins.comment")
+    end,
+    },
+
+    "nvim-lualine/lualine.nvim", --statusline
 
     -- autocompletion
-    "hrsh7th/nvim-cmp", -- completion plugin
-    "hrsh7th/cmp-buffer", -- source for text in buffer
-    "hrsh7th/cmp-path", -- source for file system paths
-
-    -- snippets
-    "L3MON4D3/LuaSnip", -- snippet engine
-    "saadparwaiz1/cmp_luasnip", -- for autocompletion
-    "rafamadriz/friendly-snippets", -- useful snippets
+    {
+      "hrsh7th/nvim-cmp", -- completion plugin
+      event = "InsertEnter",
+      dependencies = {
+      "hrsh7th/cmp-buffer", -- source for text in buffer
+      "hrsh7th/cmp-path", -- source for file system paths
+      "onsails/lspkind.nvim",
+      "hrsh7th/cmp-nvim-lsp",
+      --snippets
+      "L3MON4D3/LuaSnip", -- snippet engine
+      "saadparwaiz1/cmp_luasnip", -- for autocompletion
+      "rafamadriz/friendly-snippets", -- useful snippets
+      },
+      config = function()
+        require("RDSM.plugins.nvim-cmp")
+      end,
+    },
 
     --managing & installing lsp servers
     "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
 
     --configuring lsp servers
-    "neovim/nvim-lspconfig",
-    "hrsh7th/cmp-nvim-lsp",
     {
-    "glepnir/lspsaga.nvim",
-      branch = "main",
+      "VonHeikemen/lsp-zero.nvim",
+      event = { 'BufReadPre', 'BufNewFile' },
       dependencies = {
-        { "nvim-tree/nvim-web-devicons" },
-        { "nvim-treesitter/nvim-treesitter" },
+        "williamboman/mason-lspconfig.nvim",
+        "neovim/nvim-lspconfig",
       },
-    }, -- enhanced lsp uis
+      config = function()
+        require("RDSM.plugins.lsp.mason")
+        require("RDSM.plugins.lsp.lspconfig")
+      end,
+    },
+
+    {
+      "glepnir/lspsaga.nvim",
+      branch = "main",
+      event = "LspAttach",
+      config = function()
+        require("RDSM.plugins.lsp.lspsaga")
+      end
+    },
+
+    -- enhanced lsp uis
     "jose-elias-alvarez/typescript.nvim",
-    "onsails/lspkind.nvim",
 
    --treesitter 
     {
       "nvim-treesitter/nvim-treesitter",
-      build = function()
-        local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
-        ts_update()
+      event = { 'BufReadPre', 'BufNewFile' },
+      dependencies = {
+        {"windwp/nvim-ts-autotag"},--auto closing
+      },
+      build = ":TSUpdate",
+      config = function()
+        require("RDSM.plugins.treesitter")
       end,
     },
 
     --auto closing
+    {
     "windwp/nvim-autopairs",
-    { "windwp/nvim-ts-autotag", dependencies = {"nvim-treesitter"} },
+    event = "InsertEnter",
+    config = function()
+     require("RDSM.plugins.autopairs")
+    end,
+    },
 
     --git signs plugin
     "lewis6991/gitsigns.nvim",
@@ -79,19 +128,14 @@ local plugins = {
     {"akinsho/toggleterm.nvim", version = "*"},
 
     -- deal with sessions    
-    "rmagatti/auto-session",
     {
       "rmagatti/session-lens",
-      dependencies = {"nvim-telescope/telescope.nvim"},
+      dependencies = {
+        {"rmagatti/auto-session"},
+      },
     },
 
     -- init screen
-    {
-      'goolord/alpha-nvim',
-      dependencies = { 'nvim-tree/nvim-web-devicons' },
-      config = function ()
-        require'alpha'.setup(require'alpha.themes.startify'.config)
-      end
-    },
+    "goolord/alpha-nvim",
 }
 require("lazy").setup(plugins, {})
