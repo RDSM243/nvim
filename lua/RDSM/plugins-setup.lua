@@ -109,6 +109,7 @@ local plugins = {
 	--configuring formatters
 	{
 		"stevearc/conform.nvim",
+		enabled = false, --to enable this plugin set this equal to true
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			require("RDSM.plugins.formatting")
@@ -159,5 +160,14 @@ local plugins = {
 		"stevearc/dressing.nvim",
 		event = "VeryLazy",
 	},
+
+  {
+    "lukas-reineke/indent-blankline.nvim",
+		event = { "BufReadPre", "BufNewFile" },
+    main = "ibl",
+    config = function()
+      require("RDSM.plugins.blankline")
+    end,
+  },
 }
 require("lazy").setup(plugins, {})
