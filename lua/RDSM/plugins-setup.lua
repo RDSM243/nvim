@@ -26,7 +26,7 @@ local plugins = {
 	"nvim-tree/nvim-web-devicons", --vscode icons
 
 	{
-		"telescope.nvim", -- fuzzy finder
+		"nvim-telescope/telescope.nvim", -- fuzzy finder
 		dependencies = {
 			-- dependency for better sorting performance
 			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
@@ -100,6 +100,7 @@ local plugins = {
 	--configuring linters
 	{
 		"mfussenegger/nvim-lint",
+    enabled = false,
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			require("RDSM.plugins.linting")
